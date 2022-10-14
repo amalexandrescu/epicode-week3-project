@@ -8,7 +8,24 @@
     <link rel="stylesheet" href="./style.css" />
     <script src="./quiz.js" defer></script>
   </head>
-  <body></body>
+  <body>
+    <div id="container">
+      <h1>Quiz</h1>
+      <div>
+        <label class="existing-label"
+          >Select the number of questions for your quiz</label
+        >
+        <select id="questions" form="numberOfQuestionsForm"></select>
+        <label class="existing-label">Select difficulty of the questions</label>
+        <select id="difficulty" form="numberOfQuestionsForm">
+          <option value="easy">easy</option>
+          <option value="medium">medium</option>
+          <option value="hard">hard</option>
+        </select>
+        <button id="start-quiz">Start quiz</button>
+      </div>
+    </div>
+  </body>
 </html>
 
 <!--
