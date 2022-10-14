@@ -66,3 +66,10 @@ label {
   margin-bottom: 1rem;
   margin-top: 0.5rem;
 }
+
+/* .trueFalse {
+} */
+
+.hide {
+  display: none;
+}
