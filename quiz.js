@@ -96,19 +96,6 @@ let questions = [
 
 // window.onload = function () {
 
-let obj = {
-  category: "Science: Computers",
-  type: "multiple",
-  difficulty: "easy",
-  question: "What does CPU stand for?",
-  correct_answer: "Central Processing Unit",
-  incorrect_answers: [
-    "Central Process Unit",
-    "Computer Personal Unit",
-    "Central Processor Unit",
-  ],
-};
-
 let score = 0;
 let questionNumber = 0;
 let totalQuestions = questions.length;
@@ -132,11 +119,6 @@ const randomiseNumbersUnique = function (num) {
   return result;
 };
 
-console.log(
-  "let's see of the randomise function works for 5 numbers: ",
-  randomiseNumbersUnique(5)
-);
-
 const createSelectForm = function (num) {
   for (let i = 0; i < num; i++) {
     const parentNode = document.querySelector("select");
@@ -157,19 +139,6 @@ totalQuestions = optionTagList.length;
 let selectTagNode = document.querySelector("#questions");
 let value = selectTagNode.options[selectTagNode.selectedIndex].value;
 
-// let arrCorrect = [];
-// let arrIncorrect = [];
-
-// obj = {
-//   category: "Science: Computers",
-//   type: "multiple",
-//   difficulty: "easy",
-//   question:
-//     "In the programming language Java, which of these keywords would you put on a variable to make sure it doesn&#039;t get modified?",
-//   correct_answer: "Final",
-//   incorrect_answers: ["Static", "Private", "Public"],
-// };
-
 const generateSingleAnswersArray = function (obj) {
   let arrCorrect = [];
   let arrIncorrect = [];
@@ -186,7 +155,7 @@ const generateSingleAnswersArray = function (obj) {
   } else if (typeof arrCorrect[0] === "object") {
     arrCorrectLength = arrCorrect[0].length;
     for (let i = 0; i < arrCorrectLength; i++) {
-      arrOfAnswers.push(arrIncorrect[0][i]);
+      arrOfAnswers.push(arrCorrect[0][i]);
       arrOfAnswers.push(true);
     }
   }
@@ -204,7 +173,6 @@ const generateSingleAnswersArray = function (obj) {
   }
 
   const arrayRandomIndexes = randomiseNumbersUnique(arrOfAnswers.length);
-  console.log(arrayRandomIndexes);
 
   const arrEvenIndexes = [];
   for (let i = 0; i < arrOfAnswers.length; i++) {
@@ -223,7 +191,7 @@ const generateSingleAnswersArray = function (obj) {
   return randomisedArrOfAnswers;
 };
 
-console.log("a single array generated", generateSingleAnswersArray(obj));
+// console.log("a single array generated", generateSingleAnswersArray(obj));
 
 const generateQuestionTemplate = function (obj) {
   value = selectTagNode.options[selectTagNode.selectedIndex].value;
@@ -248,14 +216,14 @@ const generateQuestionTemplate = function (obj) {
   for (let i = 0; i < totalAnswers; i += 2) {
     const newDivNode = document.createElement("div");
     newDivNode.classList.add("customDivAnswer");
-    const radioNode = document.createElement("input");
-    radioNode.setAttribute("type", "checkbox");
-    radioNode.setAttribute("id", i + 1);
-    if (answersArray[j] === true) radioNode.classList.add("true");
+    const checkboxNode = document.createElement("input");
+    checkboxNode.setAttribute("type", "checkbox");
+    checkboxNode.setAttribute("id", i + 1);
+    if (answersArray[j] === true) checkboxNode.classList.add("true");
     const labelNode = document.createElement("label");
     labelNode.innerText = answersArray[i];
     divContainer.appendChild(newDivNode);
-    newDivNode.appendChild(radioNode);
+    newDivNode.appendChild(checkboxNode);
     newDivNode.appendChild(labelNode);
     j += 2;
   }
@@ -271,28 +239,28 @@ const generateQuestionTemplate = function (obj) {
   divContainer.appendChild(showScoreDiv);
 };
 
-let radioList = document.getElementsByTagName("input");
+let checkboxList = document.getElementsByTagName("input");
 
-const checkRadio = function () {
-  radioList = document.getElementsByTagName("input");
+const tickCheckbox = function () {
+  checkboxList = document.getElementsByTagName("input");
 
-  for (let i = 0; i < radioList.length; i++) {
-    radioList[i].addEventListener("click", () => {
-      radioList[i].classList.toggle("check");
+  for (let i = 0; i < checkboxList.length; i++) {
+    checkboxList[i].addEventListener("click", () => {
+      checkboxList[i].classList.toggle("check");
     });
   }
 };
 
 const checkAnswer = function (obj) {
   let arr = generateSingleAnswersArray(obj);
-  radioList = document.getElementsByTagName("input");
+  checkboxList = document.getElementsByTagName("input");
 
-  for (let i = 0; i < radioList.length; i++) {
+  for (let i = 0; i < checkboxList.length; i++) {
     if (
-      (radioList[i].classList.contains("true") &&
-        radioList[i].classList.contains("check") != true) ||
-      (radioList[i].classList.contains("true") != true &&
-        radioList[i].classList.contains("check") === true)
+      (checkboxList[i].classList.contains("true") &&
+        checkboxList[i].classList.contains("check") != true) ||
+      (checkboxList[i].classList.contains("true") != true &&
+        checkboxList[i].classList.contains("check") === true)
     ) {
       return false;
     }
@@ -324,14 +292,8 @@ const startQuiz = function () {
     randomQuestionsArr.push(questions[randomIndexesArr[i]]);
   }
 
-  console.log(
-    "our array of questions after randomising it: ",
-    randomQuestionsArr
-  );
-
   score = 0;
   currentQuizQuestion = 0;
-  console.log("current question ", currentQuizQuestion);
   totalQuizQuestions = getUserQuestionCount();
 
   questions = randomQuestionsArr.slice();
@@ -340,14 +302,13 @@ const startQuiz = function () {
   console.log(generateSingleAnswersArray(questions[currentQuizQuestion]));
 
   let nextButton = document.getElementsByClassName("customNextButton")[0];
-  checkRadio();
-  // checkAnswer(questions[currentQuizQuestion]);
+  tickCheckbox();
 
   nextButton.addEventListener("click", nextQuestion);
 };
 
 const nextQuestion = function () {
-  checkRadio();
+  tickCheckbox();
   checkAnswer(questions[currentQuizQuestion]);
   console.log("score", score);
 
@@ -375,10 +336,8 @@ const nextQuestion = function () {
   generateQuestionTemplate(questions[currentQuizQuestion]);
   console.log(generateSingleAnswersArray(questions[currentQuizQuestion]));
 
-  console.log("current question ", currentQuizQuestion);
-
   let nextButton = document.getElementsByClassName("customNextButton")[0];
-  checkRadio();
+  tickCheckbox();
 
   nextButton.addEventListener("click", nextQuestion);
 };
