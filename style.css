@@ -12,7 +12,6 @@ h1 {
   font-size: 3rem;
   padding-block: 1rem;
   text-align: center;
-  /* text-decoration: underline; */
 }
 
 hr {
@@ -103,7 +102,6 @@ label.existing-label {
   right: 10px;
   bottom: 10px;
   font-size: 1.5rem;
-  /* padding-block: 1rem; */
 }
 
 .green {
