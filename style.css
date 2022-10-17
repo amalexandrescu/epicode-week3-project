@@ -4,27 +4,51 @@ html {
 
 body {
   margin: 0;
-  background-color: rgb(188, 190, 228);
+  background-color: rgb(132, 165, 157);
+  color: rgb(60 95 86);
 }
 
 h1 {
   font-size: 3rem;
   padding-block: 1rem;
   text-align: center;
+  /* text-decoration: underline; */
+}
+
+hr {
+  width: 90%;
+  color: #5d5a5a;
 }
 
 #container {
-  width: 80%;
-  background-color: aquamarine;
+  width: 30%;
+  background-color: rgb(245, 202, 195);
   margin-inline: auto;
-  /* display: flex;
-  flex-direction: column; */
+  aspect-ratio: 1/1;
+  border-radius: 6px;
+  margin-top: 15rem;
+  position: relative;
 }
 
-.existing-label {
+#questions {
+  display: block;
+  margin-inline: auto;
+  margin-block: 1rem;
+  color: #5d5a5a;
+}
+
+label.existing-label {
   font-size: 1.5rem;
-  display: inline-block;
+  display: block;
+  text-align: center;
   padding-inline: 1rem;
+}
+
+#difficulty {
+  display: block;
+  margin-block: 1rem;
+  margin-inline: auto;
+  color: #5d5a5a;
 }
 
 .customSelectTag {
@@ -34,25 +58,25 @@ h1 {
 }
 
 #start-quiz {
-  margin-left: 5.5rem;
-}
-
-.customSelectTag select {
-  background-color: red;
+  display: block;
+  margin-inline: auto;
+  margin-top: 4rem;
+  font-size: 1.5rem;
+  padding: 0.5rem;
+  background-color: rgb(132, 165, 157);
+  border: none;
+  border-radius: 6px;
+  color: rgb(37 46 44);
 }
 
 .customP {
   font-size: 2rem;
-  text-align: center;
+  text-align: justify;
   padding-block: 1rem;
-  background-color: pink;
+  padding-inline: 1rem;
 }
 
-input[type="radio"] {
-  margin-inline: 1rem;
-}
-
-label {
+.customDivAnswer label {
   font-size: 1.6rem;
   display: inline-block;
 }
@@ -60,16 +84,37 @@ label {
 .customDivAnswer {
   padding-top: 0.5rem;
   padding-bottom: 1rem;
+  padding-inline: 1rem;
+  margin-inline: auto;
 }
 
 .customNextButton {
-  margin-bottom: 1rem;
-  margin-top: 0.5rem;
+  position: absolute;
+  right: 10px;
+  bottom: 35px;
 }
-
-/* .trueFalse {
-} */
 
 .hide {
   display: none;
+}
+
+#show-score {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  font-size: 1.5rem;
+  /* padding-block: 1rem; */
+}
+
+.green {
+  background-color: green;
+  /* color: green; */
+}
+
+.red {
+  background-color: red;
+}
+
+option {
+  color: rgb(60 95 86);
 }
