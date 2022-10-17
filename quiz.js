@@ -1,4 +1,4 @@
-const questions = [
+let questions = [
   {
     category: "Science: Computers",
     type: "multiple",
@@ -95,10 +95,47 @@ const questions = [
 ];
 
 // window.onload = function () {
+
+let obj = {
+  category: "Science: Computers",
+  type: "multiple",
+  difficulty: "easy",
+  question: "What does CPU stand for?",
+  correct_answer: "Central Processing Unit",
+  incorrect_answers: [
+    "Central Process Unit",
+    "Computer Personal Unit",
+    "Central Processor Unit",
+  ],
+};
+
 let score = 0;
 let questionNumber = 0;
 let totalQuestions = questions.length;
-console.log(totalQuestions);
+
+console.log("total number of the initial array of questions: ", totalQuestions);
+
+const randomiseNumbersUnique = function (num) {
+  const allNumbers = [];
+  for (let i = 0; i < num; i++) {
+    allNumbers.push(i);
+  }
+
+  const result = [];
+
+  for (let i = num; i >= 1; i--) {
+    const randomPosition = Math.ceil(Math.random() * i);
+    result.push(allNumbers[randomPosition - 1]);
+    allNumbers.splice(randomPosition - 1, 1);
+  }
+
+  return result;
+};
+
+console.log(
+  "let's see of the randomise function works for 5 numbers: ",
+  randomiseNumbersUnique(5)
+);
 
 const createSelectForm = function (num) {
   for (let i = 0; i < num; i++) {
@@ -117,29 +154,25 @@ createSelectForm(totalQuestions);
 let optionTagList = document.querySelectorAll("#questions option");
 totalQuestions = optionTagList.length;
 
-const selectTagNode = document.querySelector("#questions");
+let selectTagNode = document.querySelector("#questions");
 let value = selectTagNode.options[selectTagNode.selectedIndex].value;
 
-let obj = {
-  category: "Science: Computers",
-  type: "multiple",
-  difficulty: "easy",
-  question: "What does CPU stand for?",
-  correct_answer: "Central Processing Unit",
-  incorrect_answers: [
-    "Central Process Unit",
-    "Computer Personal Unit",
-    "Central Processor Unit",
-  ],
-};
+// let arrCorrect = [];
+// let arrIncorrect = [];
+
+// obj = {
+//   category: "Science: Computers",
+//   type: "multiple",
+//   difficulty: "easy",
+//   question:
+//     "In the programming language Java, which of these keywords would you put on a variable to make sure it doesn&#039;t get modified?",
+//   correct_answer: "Final",
+//   incorrect_answers: ["Static", "Private", "Public"],
+// };
 
 const generateSingleAnswersArray = function (obj) {
   let arrCorrect = [];
   let arrIncorrect = [];
-
-  // let correct = obj.correct_answer;
-  // let incorrect = obj.incorrect_answers;
-
   arrCorrect.push(obj.correct_answer);
   arrIncorrect.push(obj.incorrect_answers);
   let arrCorrectLength = 0;
@@ -150,10 +183,7 @@ const generateSingleAnswersArray = function (obj) {
     arrCorrectLength = arrCorrect.length;
     arrOfAnswers.push(arrCorrect[0]);
     arrOfAnswers.push(true);
-  } else if (
-    // typeof arrCorrect[0] === "array" ||
-    typeof arrCorrect[0] === "object"
-  ) {
+  } else if (typeof arrCorrect[0] === "object") {
     arrCorrectLength = arrCorrect[0].length;
     for (let i = 0; i < arrCorrectLength; i++) {
       arrOfAnswers.push(arrIncorrect[0][i]);
@@ -165,10 +195,7 @@ const generateSingleAnswersArray = function (obj) {
     arrIncorrectLength = arrIncorrect.length;
     arrOfAnswers.push(arrIncorrect[0]);
     arrOfAnswers.push(false);
-  } else if (
-    // typeof arrIncorrect[0] === "array" ||
-    typeof arrIncorrect[0] === "object"
-  ) {
+  } else if (typeof arrIncorrect[0] === "object") {
     arrIncorrectLength = arrIncorrect[0].length;
     for (let i = 0; i < arrIncorrectLength; i++) {
       arrOfAnswers.push(arrIncorrect[0][i]);
@@ -176,14 +203,30 @@ const generateSingleAnswersArray = function (obj) {
     }
   }
 
-  const totalAnswers = arrCorrectLength + arrIncorrectLength;
+  const arrayRandomIndexes = randomiseNumbersUnique(arrOfAnswers.length);
+  console.log(arrayRandomIndexes);
 
-  return arrOfAnswers;
+  const arrEvenIndexes = [];
+  for (let i = 0; i < arrOfAnswers.length; i++) {
+    if (arrayRandomIndexes[i] % 2 === 0)
+      arrEvenIndexes.push(arrayRandomIndexes[i]);
+  }
+
+  const randomisedArrOfAnswers = [];
+
+  for (let i = 0; i < arrEvenIndexes.length; i++) {
+    const currentRandomIndex = arrEvenIndexes[i];
+    randomisedArrOfAnswers.push(arrOfAnswers[currentRandomIndex]);
+    randomisedArrOfAnswers.push(arrOfAnswers[currentRandomIndex + 1]);
+  }
+
+  return randomisedArrOfAnswers;
 };
 
-// console.log(gene rateSingleAnswersArray(obj));
+console.log("a single array generated", generateSingleAnswersArray(obj));
 
 const generateQuestionTemplate = function (obj) {
+  value = selectTagNode.options[selectTagNode.selectedIndex].value;
   let biggestDivNode = document.querySelector("#container");
 
   const answersArray = generateSingleAnswersArray(obj);
@@ -200,59 +243,152 @@ const generateQuestionTemplate = function (obj) {
   textParagraph.classList.add("customP");
   divContainer.appendChild(textParagraph);
 
+  let j = 1;
+
   for (let i = 0; i < totalAnswers; i += 2) {
     const newDivNode = document.createElement("div");
     newDivNode.classList.add("customDivAnswer");
     const radioNode = document.createElement("input");
     radioNode.setAttribute("type", "checkbox");
     radioNode.setAttribute("id", i + 1);
+    if (answersArray[j] === true) radioNode.classList.add("true");
     const labelNode = document.createElement("label");
     labelNode.innerText = answersArray[i];
-    // divContainer.appendChild(textParagraph);
     divContainer.appendChild(newDivNode);
     newDivNode.appendChild(radioNode);
     newDivNode.appendChild(labelNode);
+    j += 2;
   }
 
   const nextButton = document.createElement("button");
   nextButton.innerText = "NEXT";
   nextButton.classList.add("customNextButton");
   divContainer.appendChild(nextButton);
-};
 
-// generateQuestionTemplate(obj);
+  const showScoreDiv = document.createElement("div");
+  showScoreDiv.setAttribute("id", "show-score");
+  showScoreDiv.innerText = `Current score: ${score}/${value}`;
+  divContainer.appendChild(showScoreDiv);
+};
 
 let radioList = document.getElementsByTagName("input");
-
-const checkAnswer = function (obj) {
-  let correct = true;
-  let arr = generateSingleAnswersArray(obj);
-  radioList = document.getElementsByTagName("input");
-  let j = 1;
-
-  for (let i = 0; i < radioList.length; i++) {
-    if (radioList[i].checked && arr[j] === false) {
-      correct = false;
-      return correct;
-    }
-    j += 2;
-  }
-
-  score++;
-  return correct;
-};
 
 const checkRadio = function () {
   radioList = document.getElementsByTagName("input");
 
   for (let i = 0; i < radioList.length; i++) {
     radioList[i].addEventListener("click", () => {
-      radioList[i].setAttribute("checked", "");
+      radioList[i].classList.toggle("check");
     });
   }
 };
 
-// checkRadio();
+const checkAnswer = function (obj) {
+  let arr = generateSingleAnswersArray(obj);
+  radioList = document.getElementsByTagName("input");
+
+  for (let i = 0; i < radioList.length; i++) {
+    if (
+      (radioList[i].classList.contains("true") &&
+        radioList[i].classList.contains("check") != true) ||
+      (radioList[i].classList.contains("true") != true &&
+        radioList[i].classList.contains("check") === true)
+    ) {
+      return false;
+    }
+  }
+
+  score++;
+};
+
+let currentQuizQuestion;
+let totalQuizQuestions;
+
+const getUserQuestionCount = function () {
+  optionTagList = document.querySelectorAll("#questions option");
+
+  selectTagNode = document.querySelector("#questions");
+  value = selectTagNode.options[selectTagNode.selectedIndex].value;
+
+  totalQuestions = parseInt(value);
+  return totalQuestions;
+};
+
+const startQuiz = function () {
+  const divToDisplayNone = document.querySelector("#display");
+  divToDisplayNone.classList.add("hide");
+
+  const randomIndexesArr = randomiseNumbersUnique(questions.length);
+  const randomQuestionsArr = [];
+  for (let i = 0; i < randomIndexesArr.length; i++) {
+    randomQuestionsArr.push(questions[randomIndexesArr[i]]);
+  }
+
+  console.log(
+    "our array of questions after randomising it: ",
+    randomQuestionsArr
+  );
+
+  score = 0;
+  currentQuizQuestion = 0;
+  console.log("current question ", currentQuizQuestion);
+  totalQuizQuestions = getUserQuestionCount();
+
+  questions = randomQuestionsArr.slice();
+
+  generateQuestionTemplate(questions[currentQuizQuestion]);
+  console.log(generateSingleAnswersArray(questions[currentQuizQuestion]));
+
+  let nextButton = document.getElementsByClassName("customNextButton")[0];
+  checkRadio();
+  // checkAnswer(questions[currentQuizQuestion]);
+
+  nextButton.addEventListener("click", nextQuestion);
+};
+
+const nextQuestion = function () {
+  checkRadio();
+  checkAnswer(questions[currentQuizQuestion]);
+  console.log("score", score);
+
+  let wantToHide = document.querySelector("#question");
+  wantToHide.remove();
+
+  currentQuizQuestion++;
+  if (
+    currentQuizQuestion >= totalQuizQuestions &&
+    score > Math.floor(totalQuestions + 1) / 2
+  ) {
+    alert(
+      `Your score: ${score}/${totalQuizQuestions}. Congrats, you passed the quiz!`
+    );
+    return;
+  } else if (
+    currentQuizQuestion >= totalQuizQuestions &&
+    score <= Math.floor(totalQuestions + 1) / 2
+  ) {
+    alert(
+      `Your score: ${score}/${totalQuizQuestions}. Unfortunately, you did not pass the quiz!`
+    );
+    return;
+  }
+  generateQuestionTemplate(questions[currentQuizQuestion]);
+  console.log(generateSingleAnswersArray(questions[currentQuizQuestion]));
+
+  console.log("current question ", currentQuizQuestion);
+
+  let nextButton = document.getElementsByClassName("customNextButton")[0];
+  checkRadio();
+
+  nextButton.addEventListener("click", nextQuestion);
+};
+
+const startQuizButton = document.querySelector("button");
+startQuizButton.addEventListener("click", startQuiz);
+
+// How to calculate the result? You can do it in 2 ways:
+// If you are presenting all the questions together, just take all the radio buttons and check if the selected answer === correct_answer
+// If you are presenting one question at a time, just add one point or not to the user score if the selected answer === correct_answer
 
 // HINTS
 // IF YOU ARE DISPLAYING ALL THE QUESTIONS AT ONCE:
@@ -265,67 +401,3 @@ const checkRadio = function () {
 // Display the first question with the text and the radio buttons
 // when the user selects an answer, pick the next question from the array and replace the old one with it
 // saving the user's choice in a variable
-
-// };
-
-let currentQuizQuestion;
-let totalQuizQuestions;
-
-const getUserQuestionCount = function () {
-  optionTagList = document.querySelectorAll("#questions option");
-
-  let selectTagNode = document.querySelector("#questions");
-  value = selectTagNode.options[selectTagNode.selectedIndex].value;
-
-  totalQuestions = parseInt(value);
-  return totalQuestions;
-};
-
-const startQuiz = function () {
-  score = 0;
-  currentQuizQuestion = 0;
-  totalQuizQuestions = getUserQuestionCount();
-
-  generateQuestionTemplate(questions[currentQuizQuestion]);
-  console.log(generateSingleAnswersArray(questions[currentQuizQuestion]));
-
-  let nextButton = document.getElementsByClassName("customNextButton")[0];
-  nextButton.addEventListener("click", nextQuestion);
-};
-
-const nextQuestion = function () {
-  checkAnswer(questions[currentQuizQuestion]);
-  console.log(score);
-
-  let wantToHide = document.querySelector("#question");
-  wantToHide.remove();
-
-  currentQuizQuestion++;
-  if (currentQuizQuestion >= totalQuizQuestions) {
-    alert(`Your score: ${score}/${totalQuizQuestions}`);
-    return;
-  }
-  generateQuestionTemplate(questions[currentQuizQuestion]);
-  console.log(generateSingleAnswersArray(questions[currentQuizQuestion]));
-
-  let nextButton = document.getElementsByClassName("customNextButton")[0];
-  nextButton.addEventListener("click", nextQuestion);
-};
-
-const startQuizButton = document.querySelector("button");
-startQuizButton.addEventListener("click", startQuiz);
-
-// createSelectForm(totalQuestions);
-
-// for (let i = 0; i < numberOfQuestionsSelected; i++) {
-//   generateQuestionTemplate(questions[i]);
-//   generateSingleAnswersArray(questions[i]);
-//   checkRadio();
-//   checkAnswer();
-// }
-
-// const quiz = function () {};
-
-// How to calculate the result? You can do it in 2 ways:
-// If you are presenting all the questions together, just take all the radio buttons and check if the selected answer === correct_answer
-// If you are presenting one question at a time, just add one point or not to the user score if the selected answer === correct_answer
